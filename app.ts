@@ -1,4 +1,23 @@
-import { serve } from "https://deno.land/std/http/server.ts";
-
-serve((req) => new Response("Hello World\n"), { port: 8000 });
-console.log("Server running on http://localhost:8000/");
+const urls = [
+    'https://registry.npmjs.org/package1',
+    'https://registry.npmjs.org/package2',
+    'https://registry.npmjs.org/package3'
+  ];
+  
+  async function fetchPackageData() {
+    const promises = urls.map(url => fetch(url));
+  
+    const results = await Promise.allSettled(promises);
+  
+    for (const result of results) {
+      if (result.status === 'fulfilled') {
+        const data = await result.value.json();
+        console.log(data);
+      } else {
+        console.error(result.reason);
+      }
+    }
+  }
+  
+  fetchPackageData();
+  
